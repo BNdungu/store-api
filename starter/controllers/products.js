@@ -21,6 +21,28 @@ const getAllProducts = async (req,res) => {
         queryObj.name = { $regex: name, $options: 'i'}
     }
 
+    if (numericFilters){
+        const operatorMap = {
+            '>': '$gt',
+            '>=': '$gte',
+            '=': '$eq',
+            '<': '$lt',
+            '<=': '$lte',
+        }
+
+        const regEx = /\b(>|>=|=|<|<=)\b/g
+
+        let filters = numericFilters.replace(regEx,(match) => `-${operatorMap[match]}-`)
+        const options = ['price', 'rating']
+        filters = filters.split(',').forEach((element) => {
+            const [field,operator, value] = element.split('-')
+            if(options.includes(field)){
+                queryObj[field] = {[operator]: parseInt(value)}
+            }
+        });
+        console.log(queryObj)
+    }
+
     let result = model.find(queryObj)
 
     if(sort){
@@ -35,29 +57,6 @@ const getAllProducts = async (req,res) => {
     if(fields){
         const fieldsList = fields.split(',').join(' ')
         result  = result.select(fieldsList)
-    }
-
-    if (numericFilters){
-        console.log(numericFilters)
-        const operatorMap = {
-            '>': '$gt',
-            '>=': '$gte',
-            '=': '$eq',
-            '<': '$lt',
-            '<=': '$lte',
-        }
-
-        const regEx = /\b(>|>=|=|<|<+)\b/g
-
-        let filters = numericFilters.replace(regEx,(match) => `-${operatorMap[match]}-`)
-        const options = ['price', 'rating']
-        filters = filters.split(',').forEach(element => {
-            const [field,operator, value] = element.split('-')
-            if(options.includes(field)){
-                queryObj[field] = {[operator]: parseInt(value)}
-            }
-        });
-        console.log(queryObj)
     }
 
     const page = parseInt(req.query.page) || 1
