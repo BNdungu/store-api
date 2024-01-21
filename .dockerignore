@@ -1,0 +1,5 @@
+src/.dockerignore
+src/.gitignore
+src/README.md
+src/node/modules
+src/.env
