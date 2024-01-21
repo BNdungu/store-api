@@ -7,7 +7,7 @@ const getAllProductsStatic = async (req,res) => {
 }
 
 const getAllProducts = async (req,res) => {
-    const {featured, company, name, sort, fields, limit, skip} = req.query
+    const {featured, company, name, sort, fields} = req.query
     const queryObj = {}
 
     if (featured){
@@ -38,17 +38,12 @@ const getAllProducts = async (req,res) => {
         result  = result.select(fieldsList)
     }
 
-    if(limit){
-        result  = result.limit(parseInt(limit))
-    }
+    const page = parseInt(req.query.page) || 1
+    const limit = parseInt(req.query.limit) || 10
+    const skip = (page - 1) * limit
 
-    if(skip){
-        result  = result.skip(parseInt(skip))
-    }
+    result = result.skip(skip).limit(limit)
 
-    const age = '14'
-    const agge = age.toNu
-    
     const products = await result
 
     res.status(200).json({
