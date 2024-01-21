@@ -1,11 +1,18 @@
 version: '3'
 services:
+  mongodb:
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=ndungu
+      - MONGO_INITDB_ROOT_PASSWORD=ndungu11
+
   store_api:
     build:
       context: .
       args:
-        - NODE_ENV: development
+        NODE_ENV: development
     volumes:
-      - src/:app:ro
+      - ./src/:/app:ro
       - /app/node_modules
+    ports:
+      - "3000:3000"
     command: npm run dev
