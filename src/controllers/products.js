@@ -40,7 +40,6 @@ const getAllProducts = async (req,res) => {
                 queryObj[field] = {[operator]: parseInt(value)}
             }
         });
-        console.log(queryObj)
     }
 
     let result = model.find(queryObj)
