@@ -2,12 +2,15 @@ version: '3'
 services:
   mongodb:
     image: mongo
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=ndungu
+      - MONGO_INITDB_ROOT_PASSWORD=ndungu11
     volumes:
       - mongod:/data/db
-  store_app:
+  store_api:
     build: .
     ports:
-      - "3000: 3000"
+      - "3000:3000"
     depends_on:
       - mongodb
 
