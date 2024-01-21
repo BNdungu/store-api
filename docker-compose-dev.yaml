@@ -1,0 +1,11 @@
+version: '3'
+services:
+  store_api:
+    build:
+      context: .
+      args:
+        - NODE_ENV: development
+    volumes:
+      - src/:app:ro
+      - /app/node_modules
+    command: npm run dev
